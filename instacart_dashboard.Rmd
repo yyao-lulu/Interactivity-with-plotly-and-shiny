@@ -33,7 +33,23 @@ instacart = read_csv("./instacart_train_data.csv.zip") %>%
 
 
 
-Column {data-width=650}
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Barplot
+
+How many items ordered for each department? 
+```{r}
+instacart %>% 
+  count(department) %>% 
+  rename(items = n) %>% 
+  mutate(department = fct_reorder(department,items)) %>% 
+  plot_ly(x = ~department, y = ~items, color = ~department, type = "bar")
+```
+
+
+
+Column {data-width=500}
 -----------------------------------------------------------------------
 
 ### Boxplot
@@ -48,22 +64,28 @@ instacart %>%
   plot_ly(y = ~order_hour_of_day, color = ~department, type = "box", colors = "Set2")
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
 
-### Barplot
-
-How many items ordered for each department? 
-```{r}
-
-```
 
 ### Product reorder ratio
 
 Products with a high number of orders are naturally more likely to be reordered. However, there seems to be a ceiling effect.
 
 ```{r }
+## reorder
+reordered = instacart %>% 
+  filter(reordered == 1) %>% 
+  count(product_id) %>% 
+  rename(reordered = n)
 
+instacart %>% 
+  count(product_id, department) %>%
+  rename(ordered = n) %>% 
+  left_join(reordered) %>% 
+  mutate(reordered = ifelse(is.na(reordered),0,reordered),
+         reo_ratio=reordered/ordered,
+         tlabel=str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
+  plot_ly(x= ~ordered,y= ~reo_ratio, type = "scatter", mode = "markers", alpha=0.5, text = ~tlabel, color = I("black"))
+  
 ```
 
 
