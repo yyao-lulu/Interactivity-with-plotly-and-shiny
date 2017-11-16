@@ -1,0 +1,96 @@
+---
+title: "Problem 2"
+author: "Yangwei Yan / Yunqiu Yao"
+date: "11/16/2017"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+  runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(plotly)
+library(shiny)
+```
+
+```{r}
+## Import and clean the data "Instacart".
+instacart = read_csv("./instacart_train_data.csv.zip") %>%
+  clean_names()
+
+```
+
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+dpts = instacart %>% distinct(department) %>% pull()
+
+# selectInput widget
+selectInput("dpt_choice", label = h3("Select department"), 
+            choices = dpts, multiple = TRUE, selected = c("dairy eggs", "produce", "canned goods", "beverages", "deli"))
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+reordered = instacart %>% 
+  filter(reordered == 1) %>% 
+  count(product_id) %>% 
+  rename(reordered = n)
+
+renderPlotly({
+  instacart %>% 
+  count(product_id, department) %>%
+  rename(ordered = n) %>% 
+  left_join(reordered) %>% 
+  filter(department == input$dpt_choice) %>% 
+  mutate(reordered = ifelse(is.na(reordered),0,reordered),
+         reo_ratio=reordered/ordered,
+         tlabel=str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
+  plot_ly(x= ~ordered,y= ~reo_ratio, type = "scatter", mode = "markers", alpha=0.5, text = ~tlabel, color = I("black"))
+})
+
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+renderPlotly({
+  instacart %>%
+  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %>%
+  select(department, order_hour_of_day) %>%
+## The IQR of each department was in increasing order.
+    filter(department == input$dpt_choice) %>% 
+  plot_ly(y = ~order_hour_of_day, color = ~department, type = "box", colors = "Set2")
+})
+
+```
+
+### Chart C
+
+```{r}
+renderPlotly({
+  instacart %>% 
+  filter(department == input$dpt_choice) %>% 
+  count(department) %>% 
+  rename(items = n) %>% 
+  mutate(department = fct_reorder(department,items)) %>% 
+  plot_ly(x = ~department, y = ~items, color = ~department, type = "bar")
+})
+
+```

@@ -1,13 +1,16 @@
-name: "Yay internet!"
-output_dir: "."
+name: Yay internet!
+output_dir: .
 navbar:
-  title: "Home"
+  title: Home
   right:
-    - text: "dashboard"
-      href: instacart_dashboard.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
-    - icon: fa-github fa-lg
-      href: http://github.com/<YOUR_GH_NAME>/
+  - text: "Dashboard1"
+    href: instacart_dashboard1.html
+  - text: "Dashobard2"
+    href: instacart_dashboard2.html
+  - icon: fa-envelope fa-lg
+    href: mailto:<you@youremail.com>
+  - icon: fa-github fa-lg
+    href: http://github.com/<YOUR_GH_NAME>/
 output:
   html_document
+
