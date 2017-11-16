@@ -35,7 +35,7 @@ dpts = instacart %>% distinct(department) %>% pull()
 
 # selectInput widget
 selectInput("dpt_choice", label = h3("Select department"), 
-            choices = dpts, multiple = TRUE, selected = c("dairy eggs", "produce", "canned goods", "beverages", "deli"))
+            choices = dpts, selected = "dairy eggs")
 ```
 
 
@@ -71,12 +71,12 @@ Row {.tabset .tabset-fade}
 
 ```{r}
 renderPlotly({
-  instacart %>%
-  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %>%
-  select(department, order_hour_of_day) %>%
-## The IQR of each department was in increasing order.
-    filter(department == input$dpt_choice) %>% 
-  plot_ly(y = ~order_hour_of_day, color = ~department, type = "box", colors = "Set2")
+  instacart %>% 
+  filter(department == input$dpt_choice) %>% 
+  count(department, aisle) %>% 
+  rename(items = n) %>% 
+  mutate(aisle = fct_reorder(aisle,items)) %>% 
+  plot_ly(x = ~aisle, y = ~items, color = ~aisle, type = "bar")
 })
 
 ```
@@ -85,12 +85,13 @@ renderPlotly({
 
 ```{r}
 renderPlotly({
-  instacart %>% 
-  filter(department == input$dpt_choice) %>% 
-  count(department) %>% 
-  rename(items = n) %>% 
-  mutate(department = fct_reorder(department,items)) %>% 
-  plot_ly(x = ~department, y = ~items, color = ~department, type = "bar")
+  instacart %>%
+  mutate(aisle = fct_reorder(aisle, order_hour_of_day, IQR)) %>%
+  select(department, aisle, order_hour_of_day) %>%
+## The IQR of each department was in increasing order.
+    filter(department == input$dpt_choice) %>% 
+  plot_ly(y = ~order_hour_of_day, color = ~aisle, type = "box", colors = "Set2")
 })
+
 
 ```

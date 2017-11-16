@@ -21,8 +21,6 @@ library(viridis)
 library(plotly)
 ```
 
-# Problem 1
-
 Create a flexdashboard using plotly for interactive graphics using `Instacart` dataset.
 
 ```{r}
@@ -30,7 +28,6 @@ Create a flexdashboard using plotly for interactive graphics using `Instacart` d
 instacart = read_csv("./instacart_train_data.csv.zip") %>%
   clean_names()
 ```
-
 
 
 Column {data-width=500}
@@ -88,7 +85,5 @@ instacart %>%
   
 ```
 
-
-# Problem 2
 
 

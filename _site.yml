@@ -5,8 +5,6 @@ navbar:
   right:
   - text: "Dashboard1"
     href: instacart_dashboard1.html
-  - text: "Dashobard2"
-    href: instacart_dashboard2.html
   - icon: fa-envelope fa-lg
     href: mailto:<you@youremail.com>
   - icon: fa-github fa-lg
