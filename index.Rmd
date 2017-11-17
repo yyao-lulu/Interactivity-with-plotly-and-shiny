@@ -1,4 +1,183 @@
 ---
-title: "Holy cow!"
+title: "Instacart Interactivity"
 ---
 
+# Data description
+
+We are going to use [Instacart](instacart_train_data.csv.zip) data for Homework 6. The dataset contains 1,384,617 observations of 131,209 unique users, where each row in the dataset is a product from an order. There is a single order per user in this dataset.
+
+There are 15 variables in this dataset:
+
+* `order_id`: order identifier
+* `product_id`: product identifier
+* `add_to_cart_order`: order in which each product was added to cart
+* `reordered`: 1 if this prodcut has been ordered by this user in the past, 0 otherwise
+* `user_id`: customer identifier
+* `eval_set`: which evaluation set this order belongs in (Note that the data for use in this class is exclusively from the “train”  eval_set)
+* `order_number`: the order sequence number for this user (1=first, n=nth)
+* `order_dow`: the day of the week on which the order was placed
+* `order_hour_of_day`: the hour of the day on which the order was placed
+* `days_since_prior_order`: days since the last order, capped at 30, NA if order_number=1
+* `product_name`: name of the product
+* `aisle_id`: aisle identifier
+* `department_id`: department identifier
+* `aisle`: the name of the aisle
+* `department`: the name of the department
+
+The code below loads the libraries and imports the data.
+
+```{r eval=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(plotly)
+```
+
+```{r eval=FALSE}
+## Import and clean the data "Instacart".
+instacart = read_csv("./instacart_train_data.csv.zip") %>%
+  clean_names()
+```
+
+
+# Flexdashboard for Instacart
+
+The flexdashboard using plotly for interactive graphics are [here](instacart_dashboard1.html).
+
+## Plotly Barplot
+
+First, we create a barplot to show how many items ordered for each department?
+
+```{r eval=FALSE}
+instacart %>% 
+  count(department) %>% 
+  rename(items = n) %>% 
+  mutate(department = fct_reorder(department,items)) %>% 
+  plot_ly(x = ~department, y = ~items, color = ~department, type = "bar")
+```
+
+
+## Plotly Boxplot
+
+We are also interested that when people buy groceries online. We create a boxplot to show the distribution of the order hour of the day for each department.
+
+```{r eval=FALSE}
+instacart %>%
+  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %>%
+  select(department, order_hour_of_day) %>%
+## The IQR of each department was in increasing order.
+  plot_ly(y = ~order_hour_of_day, color = ~department, type = "box", colors = "Set2")
+```
+
+## Plotly scatterplot
+
+We also use the code below to create a scattarplot to explore the association between number of orders and probability of reordering
+
+```{r eval=FALSE}
+## reorder
+reordered = instacart %>% 
+  filter(reordered == 1) %>% 
+  count(product_id) %>% 
+  rename(reordered = n)
+
+instacart %>% 
+  count(product_id, department) %>%
+  rename(ordered = n) %>% 
+  left_join(reordered) %>% 
+  mutate(reordered = ifelse(is.na(reordered),0,reordered),
+         reo_ratio = reordered/ordered,
+         tlabel = str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
+  plot_ly(x = ~ordered,y = ~reo_ratio, type = "scatter", mode = "markers", alpha = 0.5, text = ~tlabel, color = I("black"))
+```
+
+
+# Shiny-dashboard for Instacart
+
+The Shiny dashboard are hosted [here](https://ashleyyyw.shinyapps.io/instacart_dashboard2/).
+
+Based on the plots in the flexdashboard, we add a `selectInput` to choose department and a `sliderInput` widget to select the range of how many items are ordered.
+
+```{r eval=FALSE}
+dpts = instacart %>% distinct(department) %>% pull()
+
+# selectInput widget
+selectInput("dpt_choice", label = h3("Select department"), 
+            choices = dpts, selected = "dairy eggs")
+
+item_n = instacart %>% count(aisle)
+instacart = left_join(instacart, item_n, "aisle") %>% rename(item_n = n)
+max_item = max(item_n$n)
+min_item = min(item_n$n)
+
+# sliderInput widget
+sliderInput("item_count", label = h3("Range of item counts"), min = min_item, 
+        max = max_item, value = c(10000, 50000))
+```
+
+To make the plots interactive, we replace the renderText with the code below in our flexdashboard.
+
+The scatterplot
+
+```{r eval=FALSE}
+reordered = instacart %>% 
+  filter(reordered == 1) %>% 
+  count(product_id) %>% 
+  rename(reordered = n)
+
+renderPlotly({
+  instacart %>% 
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>% 
+  count(product_id, department) %>%
+  rename(ordered = n) %>% 
+  left_join(reordered) %>% 
+  mutate(reordered = ifelse(is.na(reordered),0,reordered),
+         reo_ratio = reordered/ordered,
+         tlabel = str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
+  plot_ly(x = ~ordered,y = ~reo_ratio, type = "scatter", mode = "markers", alpha =0.5, text = ~tlabel, color = I("black"))
+})
+```
+
+The barplot
+
+```{r eval=FALSE}
+renderPlotly({
+  instacart %>% 
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>%
+  mutate(aisle = fct_reorder(aisle, item_n)) %>% 
+  plot_ly(x = ~aisle, y = ~item_n, color = ~aisle, type = "bar")
+})
+
+```
+
+The boxplot
+
+```{r eval=FALSE}
+renderPlotly({
+  instacart %>%
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>% 
+  mutate(aisle = fct_reorder(aisle, order_hour_of_day, IQR)) %>%
+  select(department, aisle, order_hour_of_day) %>%
+  plot_ly(y = ~order_hour_of_day, color = ~aisle, type = "box", colors = "Set2")
+})
+```
+
+You can access to the GitHub repository [here](https://github.com/ashleyyyw/interactivity_practice).
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 14px;
+  }
+h1 { /* Header 1 */
+  font-size: 28px;
+}
+h2 { /* Header 2 */
+  font-size: 18px;
+}
+</style>

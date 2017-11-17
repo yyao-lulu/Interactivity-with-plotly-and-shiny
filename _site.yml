@@ -7,10 +7,8 @@ navbar:
     href: instacart_dashboard1.html
   - text: "Dashboard2"
     href: https://ashleyyyw.shinyapps.io/instacart_dashboard2/
-  - icon: fa-envelope fa-lg
-    href: mailto:<you@youremail.com>
   - icon: fa-github fa-lg
-    href: http://github.com/<YOUR_GH_NAME>/
+    href: https://github.com/ashleyyyw/interactivity_practice
 output:
   html_document
 
