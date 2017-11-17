@@ -5,7 +5,7 @@ date: "11/16/2017"
 output: 
   flexdashboard::flex_dashboard:
     orientation: row
-  runtime: shiny
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +23,6 @@ library(shiny)
 ## Import and clean the data "Instacart".
 instacart = read_csv("./instacart_train_data.csv.zip") %>%
   clean_names()
-
 ```
 
 
@@ -36,13 +35,22 @@ dpts = instacart %>% distinct(department) %>% pull()
 # selectInput widget
 selectInput("dpt_choice", label = h3("Select department"), 
             choices = dpts, selected = "dairy eggs")
+
+item_n = instacart %>% count(aisle)
+instacart = left_join(instacart, item_n, "aisle") %>% rename(item_n = n)
+max_item = max(item_n$n)
+min_item = min(item_n$n)
+
+# sliderInput widget
+sliderInput("item_count", label = h3("Range of item counts"), min = min_item, 
+        max = max_item, value = c(10000, 50000))
 ```
 
 
 Row
 -----------------------------------------------------------------------
 
-### Chart A
+### Product reorder ratio
 
 ```{r}
 reordered = instacart %>% 
@@ -52,46 +60,43 @@ reordered = instacart %>%
 
 renderPlotly({
   instacart %>% 
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>% 
   count(product_id, department) %>%
   rename(ordered = n) %>% 
   left_join(reordered) %>% 
-  filter(department == input$dpt_choice) %>% 
   mutate(reordered = ifelse(is.na(reordered),0,reordered),
-         reo_ratio=reordered/ordered,
-         tlabel=str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
-  plot_ly(x= ~ordered,y= ~reo_ratio, type = "scatter", mode = "markers", alpha=0.5, text = ~tlabel, color = I("black"))
+         reo_ratio = reordered/ordered,
+         tlabel = str_c("Product_ID: ", product_id, product_id, '\nDepartment: ', department)) %>%
+  plot_ly(x = ~ordered,y = ~reo_ratio, type = "scatter", mode = "markers", alpha =0.5, text = ~tlabel, color = I("black"))
 })
-
 ```
 
 Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 
-### Chart B
+### Item counts by aisles
 
 ```{r}
 renderPlotly({
   instacart %>% 
-  filter(department == input$dpt_choice) %>% 
-  count(department, aisle) %>% 
-  rename(items = n) %>% 
-  mutate(aisle = fct_reorder(aisle,items)) %>% 
-  plot_ly(x = ~aisle, y = ~items, color = ~aisle, type = "bar")
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>%
+  mutate(aisle = fct_reorder(aisle, item_n)) %>% 
+  plot_ly(x = ~aisle, y = ~item_n, color = ~aisle, type = "bar")
 })
 
 ```
 
-### Chart C
+### Order hour of the day
 
 ```{r}
 renderPlotly({
   instacart %>%
+  filter(department == input$dpt_choice,
+         item_n %in% input$item_count[1]:input$item_count[2]) %>% 
   mutate(aisle = fct_reorder(aisle, order_hour_of_day, IQR)) %>%
   select(department, aisle, order_hour_of_day) %>%
-## The IQR of each department was in increasing order.
-    filter(department == input$dpt_choice) %>% 
   plot_ly(y = ~order_hour_of_day, color = ~aisle, type = "box", colors = "Set2")
 })
-
-
 ```
