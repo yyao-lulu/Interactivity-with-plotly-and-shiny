@@ -2,6 +2,10 @@
 title: "Instacart Interactivity"
 ---
 
+
+**You can access to the GitHub repository [here](https://github.com/ashleyyyw/interactivity_practice).**
+
+
 # Data description
 
 We are going to use [Instacart](instacart_train_data.csv.zip) data for Homework 6. The dataset contains 1,384,617 observations of 131,209 unique users, where each row in the dataset is a product from an order. There is a single order per user in this dataset.
@@ -49,7 +53,7 @@ The flexdashboard using plotly for interactive graphics are [here](instacart_das
 
 ## Plotly Barplot
 
-First, we create a barplot to show how many items ordered for each department?
+First, we create a barplot to show how many items ordered for each department.
 
 ```{r eval=FALSE}
 instacart %>% 
@@ -62,7 +66,7 @@ instacart %>%
 
 ## Plotly Boxplot
 
-We are also interested that when people buy groceries online. We create a boxplot to show the distribution of the order hour of the day for each department.
+We are also interested when people buy groceries online. We create a boxplot to show the distribution of the order hour of the day for each department.
 
 ```{r eval=FALSE}
 instacart %>%
@@ -96,7 +100,7 @@ instacart %>%
 
 # Shiny-dashboard for Instacart
 
-The Shiny dashboard are hosted [here](https://ashleyyyw.shinyapps.io/instacart_dashboard2/).
+The Shiny dashboard are hosted [here](https://yyao-lulu.shinyapps.io/instacart_dashboard2/).
 
 Based on the plots in the flexdashboard, we add a `selectInput` to choose department and a `sliderInput` widget to select the range of how many items are ordered.
 
@@ -167,7 +171,7 @@ renderPlotly({
 })
 ```
 
-You can access to the GitHub repository [here](https://github.com/ashleyyyw/interactivity_practice).
+
 
 <style type="text/css">
 
