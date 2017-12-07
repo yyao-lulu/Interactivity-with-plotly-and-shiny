@@ -100,7 +100,7 @@ instacart %>%
 
 # Shiny-dashboard for Instacart
 
-The Shiny dashboard are hosted [here](https://yyao-lulu.shinyapps.io/instacart_dashboard2/).
+The Shiny dashboard are hosted [here](https://yunqiu-yao.shinyapps.io/instacart_dashboard2/).
 
 Based on the plots in the flexdashboard, we add a `selectInput` to choose department and a `sliderInput` widget to select the range of how many items are ordered.
 
