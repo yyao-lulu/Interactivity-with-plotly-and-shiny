@@ -1,9 +1,10 @@
 ---
 title: "Instacart Interactivity"
+author: "Yunqiu Yao, Yangwei Yan"
 ---
 
 
-**You can access to the GitHub repository [here](https://github.com/ashleyyyw/interactivity_practice).**
+**GitHub repository is [here](https://github.com/ashleyyyw/interactivity_practice).**
 
 
 # Data description
