@@ -1,7 +1,22 @@
 ---
-title: "Instacart Interactivity"
+title: "Interactivity for Instacart with Plotly and Shiny"
 author: "Yunqiu Yao, Yangwei Yan"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE,
+  fig.width = 8,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
 
 
 **The GitHub repository is [here](https://github.com/ashleyyyw/interactivity_practice).**
@@ -101,7 +116,7 @@ instacart %>%
 
 # Shiny-dashboard for Instacart
 
-The Shiny dashboard are hosted [here](https://yunqiu-yao.shinyapps.io/instacart_dashboard2/).
+The Shiny dashboard is hosted [here](https://yunqiu-yao.shinyapps.io/instacart_dashboard2/).
 
 Based on the plots in the flexdashboard, we add a `selectInput` to choose department and a `sliderInput` widget to select the range of how many items are ordered.
 

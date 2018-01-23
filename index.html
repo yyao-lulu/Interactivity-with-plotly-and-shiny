@@ -12,7 +12,7 @@
 <meta name="author" content="Yunqiu Yao, Yangwei Yan" />
 
 
-<title>Instacart Interactivity</title>
+<title>Interactivity for Instacart with Plotly and Shiny</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -163,6 +166,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -177,17 +275,22 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="instacart_dashboard1.html">Dashboard1</a>
 </li>
 <li>
   <a href="https://yunqiu-yao.shinyapps.io/instacart_dashboard2/">Dashboard2</a>
 </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:&lt;yunqiu.yao@columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
 <li>
-  <a href="https://github.com/ashleyyyw/interactivity_practice">
+  <a href="https://github.com/yyao-lulu/Interactivity-with-plotly-and-shiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -201,7 +304,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Instacart Interactivity</h1>
+<h1 class="title toc-ignore">Interactivity for Instacart with Plotly and Shiny</h1>
 <h4 class="author"><em>Yunqiu Yao, Yangwei Yan</em></h4>
 
 </div>
@@ -283,7 +386,7 @@ instacart %&gt;%
 </div>
 <div id="shiny-dashboard-for-instacart" class="section level1">
 <h1>Shiny-dashboard for Instacart</h1>
-<p>The Shiny dashboard are hosted <a href="https://yunqiu-yao.shinyapps.io/instacart_dashboard2/">here</a>.</p>
+<p>The Shiny dashboard is hosted <a href="https://yunqiu-yao.shinyapps.io/instacart_dashboard2/">here</a>.</p>
 <p>Based on the plots in the flexdashboard, we add a <code>selectInput</code> to choose department and a <code>sliderInput</code> widget to select the range of how many items are ordered.</p>
 <pre class="r"><code>dpts = instacart %&gt;% distinct(department) %&gt;% pull()
 
@@ -325,7 +428,8 @@ renderPlotly({
          item_n %in% input$item_count[1]:input$item_count[2]) %&gt;%
   mutate(aisle = fct_reorder(aisle, item_n)) %&gt;% 
   plot_ly(x = ~aisle, y = ~item_n, color = ~aisle, type = &quot;bar&quot;)
-})</code></pre>
+})
+</code></pre>
 <p>The boxplot</p>
 <pre class="r"><code>renderPlotly({
   instacart %&gt;%
@@ -351,6 +455,8 @@ h2 { /* Header 2 */
 
 
 
+</div>
+</div>
 
 </div>
 

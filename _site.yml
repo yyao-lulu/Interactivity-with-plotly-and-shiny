@@ -2,13 +2,16 @@ name: Yay internet!
 output_dir: .
 navbar:
   title: Home
+  left:
+    - text: "Dashboard1"
+      href: instacart_dashboard1.html
+    - text: "Dashboard2"
+      href: https://yunqiu-yao.shinyapps.io/instacart_dashboard2/
   right:
-  - text: "Dashboard1"
-    href: instacart_dashboard1.html
-  - text: "Dashboard2"
-    href: https://yunqiu-yao.shinyapps.io/instacart_dashboard2/
-  - icon: fa-github fa-lg
-    href: https://github.com/ashleyyyw/interactivity_practice
+    - icon: fa-envelope fa-lg
+      href: mailto:<yunqiu.yao@columbia.edu>
+    - icon: fa-github fa-lg
+      href: https://github.com/yyao-lulu/Interactivity-with-plotly-and-shiny
 output:
   html_document
 
