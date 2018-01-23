@@ -12,7 +12,7 @@
 <meta name="author" content="Yunqiu Yao, Yangwei Yan" />
 
 
-<title>Interactivity for Instacart with Plotly and Shiny</title>
+<title>Instacart dashboard with Plotly and Shiny</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -304,7 +304,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Interactivity for Instacart with Plotly and Shiny</h1>
+<h1 class="title toc-ignore">Instacart dashboard with Plotly and Shiny</h1>
 <h4 class="author"><em>Yunqiu Yao, Yangwei Yan</em></h4>
 
 </div>
@@ -344,8 +344,8 @@ library(plotly)</code></pre>
 instacart = read_csv(&quot;./instacart_train_data.csv.zip&quot;) %&gt;%
   clean_names()</code></pre>
 </div>
-<div id="flexdashboard-for-instacart" class="section level1">
-<h1>Flexdashboard for Instacart</h1>
+<div id="plotly-dashboard" class="section level1">
+<h1>Plotly-dashboard</h1>
 <p>The flexdashboard using plotly for interactive graphics are <a href="instacart_dashboard1.html">here</a>.</p>
 <div id="plotly-barplot" class="section level2">
 <h2>Plotly Barplot</h2>
@@ -384,8 +384,8 @@ instacart %&gt;%
   plot_ly(x = ~ordered,y = ~reo_ratio, type = &quot;scatter&quot;, mode = &quot;markers&quot;, alpha = 0.5, text = ~tlabel, color = I(&quot;black&quot;))</code></pre>
 </div>
 </div>
-<div id="shiny-dashboard-for-instacart" class="section level1">
-<h1>Shiny-dashboard for Instacart</h1>
+<div id="shiny-dashboard" class="section level1">
+<h1>Shiny-dashboard</h1>
 <p>The Shiny dashboard is hosted <a href="https://yunqiu-yao.shinyapps.io/instacart_dashboard2/">here</a>.</p>
 <p>Based on the plots in the flexdashboard, we add a <code>selectInput</code> to choose department and a <code>sliderInput</code> widget to select the range of how many items are ordered.</p>
 <pre class="r"><code>dpts = instacart %&gt;% distinct(department) %&gt;% pull()
