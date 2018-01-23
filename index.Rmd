@@ -4,7 +4,7 @@ author: "Yunqiu Yao, Yangwei Yan"
 ---
 
 
-**GitHub repository is [here](https://github.com/ashleyyyw/interactivity_practice).**
+**The GitHub repository is [here](https://github.com/ashleyyyw/interactivity_practice).**
 
 
 # Data description
