@@ -18,9 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-**The GitHub repository is [here](https://github.com/ashleyyyw/interactivity_practice).**
-
+This page includes the code for data description and relevant processing steps. You can directly visit the dashboards from the navigation bar.
 
 # Data description
 

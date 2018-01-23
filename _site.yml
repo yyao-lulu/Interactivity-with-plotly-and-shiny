@@ -3,9 +3,9 @@ output_dir: .
 navbar:
   title: Home
   left:
-    - text: "Dashboard1"
+    - text: "Plotly-dashboard"
       href: instacart_dashboard1.html
-    - text: "Dashboard2"
+    - text: "Shiny-dashboard"
       href: https://yunqiu-yao.shinyapps.io/instacart_dashboard2/
   right:
     - icon: fa-envelope fa-lg
