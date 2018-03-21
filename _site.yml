@@ -8,6 +8,8 @@ navbar:
     - text: "Shiny-dashboard"
       href: https://yunqiu-yao.shinyapps.io/instacart_dashboard2/
   right:
+    - icon: fa-globe fa-lg
+      href: https://yyao-lulu.github.io/
     - icon: fa-envelope fa-lg
       href: mailto:<yunqiu.yao@columbia.edu>
     - icon: fa-github fa-lg
